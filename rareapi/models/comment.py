@@ -9,7 +9,7 @@ class Comment(models.Model):
         created_on (DateTimeField): the date and time of a comment
     """
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
-    author = models.ForeignKey("User", on_delete=models.CASCADE)
+    author = models.ForeignKey("rareUser", on_delete=models.CASCADE)
     content = models.TextField()
     created_on = models.DateTimeField()
     

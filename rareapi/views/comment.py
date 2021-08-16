@@ -53,6 +53,46 @@ class CommentView(ViewSet):
         """Handle PUT requests for a comment
         Returns: Response --Empty body with 204 status code
         """
+        author = RareUser.objects.get(user=request.auth.user)
+
+        comment = Comment.objects.get(pk=pk)
+        comment.content = request.data["content"]
+        comment.created_on = request.data["createdOn"]
+        comment.author = author
+
+        post = Post.objects.get(pk=request.data["postId"])
+        comment.post = post
+        comment.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for a single comment
+        Returns: Respons -- 200, 404, or 500 status code
+        """
+        try:
+            comment = Comment.objects.get(pk=pk)
+            comment.delete()
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        except Comment.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    def list(self, request):
+        """Handle GET requests to comments resource
+        Returns: Response --JSON serialized list of comments
+        """
+        # Get the current authenticated user
+        # author = RareUser.objects.get(user=request.auth.user)
+
+        comments = Comment.objects.all()
+
+        serializer = CommentSerializer(comments, many=True, context={'request': request})
+        return Response(serializer.data)
 
 
 
