@@ -4,6 +4,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
+from rareapi.models import RareUser
        
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -55,14 +57,14 @@ def register_user(request):
         is_staff=False
     )
 
-    # Now save the extra info in the levelupapi_gamer table
-    # gamer = Gamer.objects.create(
-    #     bio=request.data['bio'],
-    #     user=new_user
-    # )
+    #Now save the extra info in the levelupapi_gamer table
+    rareUser = RareUser.objects.create(
+        bio=request.data['bio'],
+        user=new_user
+    )
 
     # Use the REST Framework's token generator on the new user account
-    token = Token.objects.create(user=new_user)
+    token = Token.objects.create(user=rareUser.user)
     # Return the token to the client
     data = { 'token': token.key }
     return Response(data)
