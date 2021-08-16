@@ -9,7 +9,7 @@
     ], 
     "python.linting.pylintArgs": [
         "--load-plugins=pylint_django",
-        "--django-settings-module=<folder name>.settings",
+        "--django-settings-module=rare.settings",
     ],
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
