@@ -1,11 +1,13 @@
 """View module for handling requests about games"""
+from django.contrib.auth.models import User
+from rareapi.models.rareUser import RareUser
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
-from rareapi.models import Post, Category, User
+from rareapi.models import Post, Category, RareUser
 
 
 class PostView(ViewSet):
@@ -18,7 +20,7 @@ class PostView(ViewSet):
         Returns:
             [type]: [description]
         """
-        user_id = User.objects.get(user=request.auth.user)
+        user_id = RareUser.objects.get(user=request.auth.user)
         category_id = Category.objects.get(pk=request.data['categoryId'])
         try:
             post = Post.objects.create(
@@ -28,7 +30,7 @@ class PostView(ViewSet):
                 publication_date = request.data['date'],
                 image_url = request.data['image'],
                 content=request.data['content'],
-                approved = 
+                approved = request.data["approved"]
             
             )
             serializer = PostSerializer(post, context={'request': request})
@@ -45,7 +47,7 @@ class PostView(ViewSet):
         try:
             # `pk` is a parameter to this function, and
             # Django parses it from the URL route parameter
-            #   http://localhost:8000/games/2
+            #   http://localhost:8000/posts/2
             #
             # The `2` at the end of the route becomes `pk`
             post = Post.objects.get(pk=pk)
@@ -56,13 +58,16 @@ class PostView(ViewSet):
 
     def update(self, request, pk):
         """handles UPDATE"""
+
+        user_id = RareUser.objects.get(user=request.auth.user)
         post = Post.objects.get(pk=pk)
-        category_id = Category.objects.get(pk=request.data['categoryId'])
+        
+        post.category_id = Category.objects.get(pk=request.data['categoryId'])
         post.title = request.data['title']
         post.content = request.data['content']
         post.publication_date = request.data['date']
         post.image_url = request.data['image']
-        post.approved = request.data['']
+        post.approved = request.data['approved']
 
         post.save()
 
@@ -71,6 +76,7 @@ class PostView(ViewSet):
         return Response(serializer.data)
 
     def list(self, request):
+        """get all posts"""
         posts = Post.objects.all()
 
         category_id = request.query_params.get('category', None)
@@ -84,6 +90,7 @@ class PostView(ViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, pk):
+        """delete"""
         try:
             post = Post.objects.get(pk=pk)
             post.delete()
@@ -96,6 +103,17 @@ class PostView(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class PostCategorySerializer(serializers.ModelSerializer): 
+    """ post category serializer """
+    class Meta:
+        model = Category
+        fields = ['label']
+
+class PostUserSerializer(serializers.ModelSerializer):
+    """post user serializer"""
+    class Meta:
+        model = User
+        fields = ['username', 'email']
 
 class PostSerializer(serializers.ModelSerializer):
     """post serializer"""
@@ -103,3 +121,5 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = '__all__'
         # depth = 2
+
+    
