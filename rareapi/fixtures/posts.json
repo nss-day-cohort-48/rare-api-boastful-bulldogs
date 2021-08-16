@@ -1,0 +1,22 @@
+[
+    {
+        "model": "rareapi.post",
+        "pk": 1,
+        "fields": {
+            "post": 1,
+            "author": 2,
+            "content": "I knew kittens were evil.",
+            "created_on": "2021-08-16"
+        }
+    },
+    {
+        "model": "rareapi.comment",
+        "pk": 2,
+        "fields": {
+            "post": 1,
+            "author": 2,
+            "content": "level u papi'.",
+            "created_on": "2021-08-16"
+        }
+    }
+    

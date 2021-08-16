@@ -21,8 +21,7 @@ class Post(models.Model):
     approved = models.BooleanField()
 
     def __str__(self) -> str:
-        return f'{self.post.title} on {self.publication_date} hosted by {self.user_id.name}'
-    
+        return f'{self.title} on {self.publication_date} hosted by {self.user_id.name}'  
     @property
     def joined(self):
         return self.__joined

@@ -9,9 +9,10 @@ from rareapi.models import Post, Category, User
 
 
 class PostView(ViewSet):
+    """postview"""
 
     def create(self, request):
-        """[summary]
+        """creates a POST
         Args:
             request ([type]): [description]
         Returns:
@@ -27,7 +28,7 @@ class PostView(ViewSet):
                 publication_date = request.data['date'],
                 image_url = request.data['image'],
                 content=request.data['content'],
-                approved = False
+                approved = 
             
             )
             serializer = PostSerializer(post, context={'request': request})
@@ -54,6 +55,7 @@ class PostView(ViewSet):
             return HttpResponseServerError(ex)
 
     def update(self, request, pk):
+        """handles UPDATE"""
         post = Post.objects.get(pk=pk)
         category_id = Category.objects.get(pk=request.data['categoryId'])
         post.title = request.data['title']
@@ -96,6 +98,7 @@ class PostView(ViewSet):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    """post serializer"""
     class Meta:
         model = Post
         fields = '__all__'
