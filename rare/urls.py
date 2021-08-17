@@ -21,6 +21,7 @@ from rareapi.views import register_user, login_user
 from rareapi.views import CategoryView, CommentView
 
 
+
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'categories', CategoryView, 'category')
 router.register(r'comments', CommentView, 'comment')
