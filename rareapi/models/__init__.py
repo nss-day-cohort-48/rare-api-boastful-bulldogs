@@ -1,3 +1,4 @@
+from .category import Category
 from .rareUser import RareUser
 from .category import Category
 from .comment import Comment
