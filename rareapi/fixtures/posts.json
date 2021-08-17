@@ -6,7 +6,7 @@
         "user": 1,
         "category": 1,
         "title": "Post Title",
-        "publication_date": "2021-16-08",
+        "publication_date": "2021-08-16",
         "image_url": "",
         "content": "post content",
         "approved": true
@@ -16,10 +16,10 @@
     "model": "rareapi.post",
     "pk": 2,
     "fields": {
-        "user": 2,
+        "user": 1,
         "category": 2,
         "title": "another post title",
-        "publication_date": "2021-16-08",
+        "publication_date": "2021-08-16",
         "image_url": "",
         "content": "more content",
         "approved": true
