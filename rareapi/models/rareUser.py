@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Rare_User(models.Model):
+class RareUser(models.Model):
     """rare user model"""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
