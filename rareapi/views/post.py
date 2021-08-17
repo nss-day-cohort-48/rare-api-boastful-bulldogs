@@ -30,8 +30,7 @@ class PostView(ViewSet):
                 publication_date = request.data['publication_date'],
                 image_url = request.data['image_url'],
                 content=request.data['content'],
-                approved = request.data["approved"]
-            
+                approved = request.data["approved"]        
             )
             serializer = PostSerializer(post, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -117,7 +116,9 @@ class PostUserSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     """post serializer"""
+    user = PostUserSerializer(many=False)
+    category = PostCategorySerializer(many=False)
     class Meta:
         model = Post
-        fields = '__all__'
-        # depth = 2
+        fields = ('id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved' )
+        depth = 1
