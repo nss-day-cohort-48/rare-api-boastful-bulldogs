@@ -1,14 +1,11 @@
 """View module for handling requests about comments"""
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.db.models.fields import BooleanField
 from django.http import HttpResponseServerError
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
-from rest_framework.decorators import action
-from django.db.models import Count, Case, When
 from rareapi.models import RareUser, Comment, Post
 
 
@@ -23,10 +20,10 @@ class CommentView(ViewSet):
 
         comment = Comment()
         comment.content = request.data["content"]
-        comment.created_on = request.data["createdOn"]
+        comment.created_on = request.data["created_on"]
         comment.author = author
 
-        post = Post.objects.get(pk=request.data["postId"])
+        post = Post.objects.get(pk=request.data["post_id"])
         comment.post = post
 
         try:
@@ -57,10 +54,10 @@ class CommentView(ViewSet):
 
         comment = Comment.objects.get(pk=pk)
         comment.content = request.data["content"]
-        comment.created_on = request.data["createdOn"]
+        comment.created_on = request.data["created_on"]
         comment.author = author
 
-        post = Post.objects.get(pk=request.data["postId"])
+        post = Post.objects.get(pk=request.data["post_id"])
         comment.post = post
         comment.save()
 
@@ -90,17 +87,40 @@ class CommentView(ViewSet):
         # author = RareUser.objects.get(user=request.auth.user)
 
         comments = Comment.objects.all()
+        # Support filtering comments by postId
+        #    http://localhost:8000/comments?postId=1
+        #
+        # Support filtering comments by post
+        post = self.request.query_params.get('postId', None)
+        if post is not None:
+            comments = comments.filter(post__id=post)
 
         serializer = CommentSerializer(comments, many=True, context={'request': request})
         return Response(serializer.data)
 
 
 
+# class CommentUserSerializer(serializers.ModelSerializer):
+#     """JSON serializer for event organizer's related Django user"""
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'last_name']
 
+
+class CommentRareUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer"""
+    # user = CommentUserSerializer(many=False)
+
+    class Meta:
+        model = RareUser
+        fields = ['full_name']
 
 
 class CommentSerializer(serializers.ModelSerializer):
     """JSON serializer for comment"""
+
+    author = CommentRareUserSerializer(many=False)
+
     class Meta:
         model = Comment
         fields = '__all__'
