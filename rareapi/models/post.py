@@ -13,3 +13,11 @@ class Post(models.Model):
     approved = models.BooleanField()
     image_url = models.TextField()
     tags = models.ManyToManyField("Tag", through="PostTag", related_name="tags")
+
+    @property
+    def owner(self):
+        return self.__owner
+
+    @owner.setter
+    def owner(self, value):
+        self.__owner = value
