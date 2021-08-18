@@ -12,4 +12,11 @@ class Comment(models.Model):
     author = models.ForeignKey("rareUser", on_delete=models.CASCADE)
     content = models.TextField()
     created_on = models.DateTimeField()
-    
+
+    @property
+    def owner(self):
+        return self.__owner
+
+    @owner.setter
+    def owner(self, value):
+        self.__owner = value
