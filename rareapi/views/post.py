@@ -112,7 +112,7 @@ class PostUserSerializer(serializers.ModelSerializer):
     """post user serializer"""
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['email']
 
 class PostSerializer(serializers.ModelSerializer):
     """post serializer"""
