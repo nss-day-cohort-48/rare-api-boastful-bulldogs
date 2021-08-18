@@ -1,13 +1,13 @@
 """View module for handling requests about games"""
 from django.contrib.auth.models import User
-from rareapi.models.rareUser import RareUser
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
-from rareapi.models import Post, Category, RareUser
+from rareapi.models.rareUser import RareUser
+from rareapi.models import Post, Category
 
 
 class PostView(ViewSet):
@@ -30,7 +30,7 @@ class PostView(ViewSet):
                 publication_date = request.data['publication_date'],
                 image_url = request.data['image_url'],
                 content=request.data['content'],
-                approved = request.data["approved"]        
+                approved = request.data["approved"]
             )
             serializer = PostSerializer(post, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -60,7 +60,7 @@ class PostView(ViewSet):
 
         user = RareUser.objects.get(user=request.auth.user)
         post = Post.objects.get(pk=pk)
-        
+
         post.category = Category.objects.get(pk=request.data['categoryId'])
         post.title = request.data['title']
         post.content = request.data['content']
@@ -102,7 +102,7 @@ class PostView(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class PostCategorySerializer(serializers.ModelSerializer): 
+class PostCategorySerializer(serializers.ModelSerializer):
     """ post category serializer """
     class Meta:
         model = Category
