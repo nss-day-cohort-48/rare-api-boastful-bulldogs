@@ -120,4 +120,4 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
-        # depth = 2
+        depth = 2
