@@ -111,8 +111,8 @@ class PostCategorySerializer(serializers.ModelSerializer):
 class PostUserSerializer(serializers.ModelSerializer):
     """post user serializer"""
     class Meta:
-        model = User
-        fields = ['email']
+        model = RareUser
+        fields = ['full_name']
 
 class PostSerializer(serializers.ModelSerializer):
     """post serializer"""
@@ -120,5 +120,5 @@ class PostSerializer(serializers.ModelSerializer):
     category = PostCategorySerializer(many=False)
     class Meta:
         model = Post
-        fields = ['id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved' ]
+        fields = ['id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved']
         depth = 1
