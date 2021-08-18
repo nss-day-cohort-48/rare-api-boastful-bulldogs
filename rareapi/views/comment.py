@@ -119,7 +119,7 @@ class CommentRareUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RareUser
-        fields = ['full_name']
+        fields = ['id', 'full_name']
 
 
 class CommentSerializer(serializers.ModelSerializer):
