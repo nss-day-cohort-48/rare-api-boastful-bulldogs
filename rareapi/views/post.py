@@ -21,11 +21,11 @@ class PostView(ViewSet):
             [type]: [description]
         """
         user = RareUser.objects.get(user=request.auth.user)
-        category = Category.objects.get(pk=request.data['categoryId'])
+        category_id = Category.objects.get(pk=request.data['categoryId'])
         try:
             post = Post.objects.create(
                 user = user,
-                category = category,
+                category = category_id,
                 title=request.data['title'],
                 publication_date = request.data['publication_date'],
                 image_url = request.data['image_url'],
@@ -120,5 +120,5 @@ class PostSerializer(serializers.ModelSerializer):
     category = PostCategorySerializer(many=False)
     class Meta:
         model = Post
-        fields = ('id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved' )
+        fields = ['id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved' ]
         depth = 1
