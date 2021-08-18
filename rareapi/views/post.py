@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rareapi.models.rareUser import RareUser
 from rareapi.models import Post, Category
-
+from django.db.models import Case, When
+from django.db.models.fields import BooleanField
 
 class PostView(ViewSet):
     """postview"""
@@ -79,9 +80,16 @@ class PostView(ViewSet):
 
     def list(self, request):
         """get all posts"""
-        posts = Post.objects.all()
-
+        # posts = Post.objects.all()
+        user = RareUser.objects.get(user=request.auth.user)
         category= request.query_params.get('category', None)
+
+        posts = Post.objects.annotate(
+                                        owner=Case(
+                                            When(user=user, then=True),
+                                            default=False,
+                                            output_field=BooleanField()
+                                        ))
 
         if category is not None:
             posts = posts.filter(category=category)
@@ -123,5 +131,5 @@ class PostSerializer(serializers.ModelSerializer):
     category = PostCategorySerializer(many=False)
     class Meta:
         model = Post
-        fields = ['id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved', 'tags']
+        fields = ['id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved', 'tags', 'owner']
         depth = 1
