@@ -33,6 +33,7 @@ class ProfileView(ViewSet):
 
         return Response(profile)
 
+
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for gamer's related Django user"""
     class Meta:

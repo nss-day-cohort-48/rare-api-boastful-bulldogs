@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.conf.urls import include
 from django.urls import path
@@ -22,10 +23,12 @@ from rareapi.views import CategoryView
 from rareapi.views import CommentView
 from rareapi.views import PostView
 from rareapi.views import ProfileView
+from rareapi.views import TagView
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'posts', PostView, 'post')
 router.register(r'categories', CategoryView, 'category')
+router.register(r'tags', TagView, "tag")
 router.register(r'comments', CommentView, 'comment')
 router.register(r'profile', ProfileView, 'profile')
 
