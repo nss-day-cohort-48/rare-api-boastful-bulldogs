@@ -1,7 +1,9 @@
 """View module for handling requests about comments"""
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db.models.fields import BooleanField
 from django.http import HttpResponseServerError
+from django.db.models import Case, When
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -84,9 +86,13 @@ class CommentView(ViewSet):
         Returns: Response --JSON serialized list of comments
         """
         # Get the current authenticated user
-        # author = RareUser.objects.get(user=request.auth.user)
-
-        comments = Comment.objects.all()
+        author = RareUser.objects.get(user=request.auth.user)
+        # comments = Comment.objects.all()
+        comments = Comment.objects.annotate(owner=Case(
+                                                When(author=author, then=True),
+                                                default=False,
+                                                output_field=BooleanField()
+                                            ))
         # Support filtering comments by postId
         #    http://localhost:8000/comments?postId=1
         #
@@ -123,5 +129,5 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ('id', 'post', 'author', 'content', 'created_on', 'owner')
         depth = 1
