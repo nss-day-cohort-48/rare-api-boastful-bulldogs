@@ -21,17 +21,19 @@ class PostView(ViewSet):
             [type]: [description]
         """
         user = RareUser.objects.get(user=request.auth.user)
-        category_id = Category.objects.get(pk=request.data['categoryId'])
+        category_id = Category.objects.get(pk=request.data['category_id'])
+        post = Post()
+        post.user = user
+        post.category = category_id
+        post.title=request.data['title']
+        post.publication_date = request.data['publication_date']
+        post.image_url = request.data['image_url']
+        post.content=request.data['content']
+        post.approved = request.data["approved"]
+
         try:
-            post = Post.objects.create(
-                user = user,
-                category = category_id,
-                title=request.data['title'],
-                publication_date = request.data['publication_date'],
-                image_url = request.data['image_url'],
-                content=request.data['content'],
-                approved = request.data["approved"]
-            )
+            post.save()
+            post.tags.set(request.data["tags"])
             serializer = PostSerializer(post, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -67,6 +69,7 @@ class PostView(ViewSet):
         post.publication_date = request.data['publication_date']
         post.image_url = request.data['image_url']
         post.approved = request.data['approved']
+        post.tags = request.data['tags']
 
         post.save()
 
@@ -120,5 +123,5 @@ class PostSerializer(serializers.ModelSerializer):
     category = PostCategorySerializer(many=False)
     class Meta:
         model = Post
-        fields = ['id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved']
+        fields = ['id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved', 'tags']
         depth = 1
