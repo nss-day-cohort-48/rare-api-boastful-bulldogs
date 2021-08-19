@@ -1,0 +1,34 @@
+[
+  {
+    "model": "rareapi.postTag",
+    "pk": 1,
+    "fields": {
+      "post": 1,
+      "tag": 1
+    }
+  },
+  {
+    "model": "rareapi.postTag",
+    "pk": 2,
+    "fields": {
+      "post": 1,
+      "tag": 2
+    }
+  },
+  {
+    "model": "rareapi.postTag",
+    "pk": 3,
+    "fields": {
+      "post": 2,
+      "tag": 2
+    }
+  },
+  {
+    "model": "rareapi.postTag",
+    "pk": 4,
+    "fields": {
+      "post": 2,
+      "tag": 3
+    }
+  }
+]

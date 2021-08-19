@@ -11,6 +11,7 @@ from rareapi.models import Post, Category
 from django.db.models import Case, When
 from django.db.models.fields import BooleanField
 
+
 class PostView(ViewSet):
     """postview"""
 
@@ -26,10 +27,10 @@ class PostView(ViewSet):
         post = Post()
         post.user = user
         post.category = category_id
-        post.title=request.data['title']
+        post.title = request.data['title']
         post.publication_date = request.data['publication_date']
         post.image_url = request.data['image_url']
-        post.content=request.data['content']
+        post.content = request.data['content']
         post.approved = request.data["approved"]
 
         try:
@@ -82,14 +83,14 @@ class PostView(ViewSet):
         """get all posts"""
         # posts = Post.objects.all()
         user = RareUser.objects.get(user=request.auth.user)
-        category= request.query_params.get('category', None)
+        category = request.query_params.get('category', None)
 
         posts = Post.objects.annotate(
-                                        owner=Case(
-                                            When(user=user, then=True),
-                                            default=False,
-                                            output_field=BooleanField()
-                                        ))
+            owner=Case(
+                When(user=user, then=True),
+                default=False,
+                output_field=BooleanField()
+            ))
 
         if category is not None:
             posts = posts.filter(category=category)
@@ -113,11 +114,13 @@ class PostView(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 class PostCategorySerializer(serializers.ModelSerializer):
     """ post category serializer """
     class Meta:
         model = Category
         fields = ['label']
+
 
 class PostUserSerializer(serializers.ModelSerializer):
     """post user serializer"""
@@ -125,11 +128,14 @@ class PostUserSerializer(serializers.ModelSerializer):
         model = RareUser
         fields = ['full_name']
 
+
 class PostSerializer(serializers.ModelSerializer):
     """post serializer"""
     user = PostUserSerializer(many=False)
     category = PostCategorySerializer(many=False)
+
     class Meta:
         model = Post
-        fields = ['id', 'user', 'category', 'title', 'publication_date', 'image_url','content', 'content', 'approved', 'tags', 'owner']
+        fields = ['id', 'user', 'category', 'title', 'publication_date',
+                  'image_url', 'content', 'content', 'approved', 'tags', 'owner']
         depth = 1
