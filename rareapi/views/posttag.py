@@ -107,16 +107,23 @@ class PostTagView(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# class PostSerializer(serializers.ModelSerializer):
-#     """post serializer"""
-#     user = PostUserSerializer(many=False)
-#     category = PostCategorySerializer(many=False)
+class PostTagPostSerializer(serializers.ModelSerializer):
+    """post serializer"""
 
-#     class Meta:
-#         model = Post
-#         fields = ['id', 'user', 'category', 'title', 'publication_date',
-#                   'image_url', 'content', 'content', 'approved', 'tags', 'owner']
-#         depth = 1
+    class Meta:
+        model = Post
+        fields = ['id', 'title']
+        depth = 1
+
+
+class PostTagTagSerializer(serializers.ModelSerializer):
+    """For attached tags"""
+
+    class Meta:
+        model = Tag
+        fields = ['id', 'label']
+        depth = 1
+
 
 class PostTagSerializer(serializers.ModelSerializer):
     """JSON serializer for Tags
@@ -124,7 +131,10 @@ class PostTagSerializer(serializers.ModelSerializer):
     Arguments:
         serializers
     """
+    post = PostTagPostSerializer(many=False)
+    tag = PostTagTagSerializer(many=False)
+
     class Meta:
         model = PostTag
-        fields = '__all__'
-        depth = 2
+        fields = ['id', 'post', 'tag']
+        depth = 1
