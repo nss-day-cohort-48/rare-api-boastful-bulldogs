@@ -34,6 +34,14 @@ class PostTagView(ViewSet):
             Response -- JSON serialized list of post_tag types
         """
         tags = PostTag.objects.all()
+        # Support filtering appropriate tags by postId
+        #    http://localhost:8000/postTags?postId=1
+        #
+        # Support filtering comments by post
+
+        post = self.request.query_params.get('postId', None)
+        if post is not None:
+            tags = tags.filter(post__id=post)
 
         # Note the addtional `many=True` argument to the
         # serializer. It's needed when you are serializing
