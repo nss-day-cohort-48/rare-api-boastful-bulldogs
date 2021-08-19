@@ -1,0 +1,30 @@
+[
+  {
+    "model": "rareapi.tag",
+    "pk": 1,
+    "fields": {
+      "label": "Red"
+    }
+  },
+  {
+    "model": "rareapi.tag",
+    "pk": 2,
+    "fields": {
+      "label": "Blue"
+    }
+  },
+  {
+    "model": "rareapi.tag",
+    "pk": 3,
+    "fields": {
+      "label": "Green"
+    }
+  },
+  {
+    "model": "rareapi.tag",
+    "pk": 4,
+    "fields": {
+      "label": "Yellow"
+    }
+  }
+]

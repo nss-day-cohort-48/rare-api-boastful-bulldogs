@@ -81,8 +81,8 @@ class PostTagView(ViewSet):
         """
 
         post_tag = PostTag.objects.get(pk=pk)
-        post_tag.post = request.data["post_id"]
-        post_tag.tag = request.data["tag_id"]
+        post_tag.post = Post.objects.get(pk=request.data['post_id'])
+        post_tag.tag = Tag.objects.get(pk=request.data['tag_id'])
 
         post_tag.save()
 
