@@ -64,13 +64,14 @@ class PostView(ViewSet):
         user = RareUser.objects.get(user=request.auth.user)
         post = Post.objects.get(pk=pk)
 
-        post.category = Category.objects.get(pk=request.data['categoryId'])
+        post.category = Category.objects.get(pk=request.data['category_id'])
         post.title = request.data['title']
         post.content = request.data['content']
         post.publication_date = request.data['publication_date']
         post.image_url = request.data['image_url']
         post.approved = request.data['approved']
-        post.tags = request.data['tags']
+        post.tags.set(request.data["tags"])
+        # post.tags = request.data['tags']
 
         post.save()
 
@@ -117,7 +118,7 @@ class PostCategorySerializer(serializers.ModelSerializer):
     """ post category serializer """
     class Meta:
         model = Category
-        fields = ['label']
+        fields = ['id', 'label']
 
 class PostUserSerializer(serializers.ModelSerializer):
     """post user serializer"""
