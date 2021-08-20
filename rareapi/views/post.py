@@ -31,7 +31,7 @@ class PostView(ViewSet):
         post.image_url = request.data['image_url']
         post.content=request.data['content']
         post.approved = request.data["approved"]
-
+        
         try:
             post.save()
             post.tags.set(request.data["tags"])

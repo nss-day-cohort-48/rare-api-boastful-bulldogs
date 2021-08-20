@@ -5,3 +5,4 @@ from .tag import TagView
 from .comment import CommentView
 from .post import PostView
 from .profile import ProfileView
+from .rareUser import RareUserView
