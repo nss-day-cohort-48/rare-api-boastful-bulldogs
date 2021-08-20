@@ -7,9 +7,9 @@ from rest_framework.response import Response
 
 from rareapi.models import RareUser
 
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
-
 def login_user(request):
     '''Handles the authentication of a gamer
 
@@ -33,19 +33,19 @@ def login_user(request):
         return Response(data)
     else:
         # Bad login details were provided. So we can't log the user in.
-        data = { 'valid': False }
+        data = {'valid': False}
         return Response(data)
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-
 def register_user(request):
     '''Handles the creation of a new gamer for authentication
 
     Method arguments:
       request -- The full HTTP request object
     '''
-    
+
     # Create a new user by invoking the `create_user` helper method
     # on Django's built-in User model
     new_user = User.objects.create_user(
@@ -54,10 +54,11 @@ def register_user(request):
         password=request.data['password'],
         first_name=request.data['first_name'],
         last_name=request.data['last_name'],
-        is_staff=False
+        is_staff=False,
+        is_active=True
     )
 
-    #Now save the extra info in the levelupapi_gamer table
+    # Now save the extra info in the levelupapi_gamer table
     rareUser = RareUser.objects.create(
         bio=request.data['bio'],
         user=new_user
@@ -66,6 +67,5 @@ def register_user(request):
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=rareUser.user)
     # Return the token to the client
-    data = { 'token': token.key }
+    data = {'token': token.key}
     return Response(data)
-

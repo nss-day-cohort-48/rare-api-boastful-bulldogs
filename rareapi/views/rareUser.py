@@ -7,12 +7,12 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rareapi.models.rareUser import RareUser
-# from levelupapi.models import Event, Gamer, Game
 from rareapi.models.rareUser import RareUser
 
 
 class RareUserView(ViewSet):
     """Gamer can see profile information"""
+
     def retrieve(self, request, pk=None):
         """Handle GET requests for single game
         Returns:
@@ -44,7 +44,8 @@ class RareUserView(ViewSet):
         #     events, many=True, context={'request': request})
         # gamer = GamerSerializer(
         #     gamer, many=False, context={'request': request})
-        serializer = RareUserSerializer(users, many=True, context={'request': request})
+        serializer = RareUserSerializer(
+            users, many=True, context={'request': request})
         # Manually construct the JSON structure you want in the response
         # profile = {}
         # profile["user"] = user.data
@@ -57,11 +58,13 @@ class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for gamer's related Django user"""
     class Meta:
         model = User
-        fields = ('is_staff', )
+        fields = ('is_staff', 'is_active')
+
 
 class RareUserSerializer(serializers.ModelSerializer):
     """post user serializer"""
     user = UserSerializer(many=False)
+
     class Meta:
         model = RareUser
         fields = ['id', 'full_name', 'user', 'bio', 'profile_image_url']

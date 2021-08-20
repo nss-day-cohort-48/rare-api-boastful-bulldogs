@@ -38,4 +38,4 @@ class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for gamer's related Django user"""
     class Meta:
         model = User
-        fields = ('is_staff',)
+        fields = ('is_staff', 'is_active')
